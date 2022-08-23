@@ -21,7 +21,7 @@
 	integer           :: i
 	type(linked_list) :: list
 	
-	do i = 1, 5
+	do i = 1, 10
 		call prepend(list, i)
 	enddo
 	call display(list)
