@@ -19,12 +19,10 @@ module mdl_linked_list
 			type(node), pointer :: current => null()
 
 			if (.not. associated(list%head)) then
-				allocate(list%head)
-				list%head%value = num
+				call allocate_node(list%head, num)
 				list%tail => list%head
 			else
-				allocate(current)
-				current%value = num
+				call allocate_node(current, num)
 				current%next => list%head
 				list%head => current
 			endif
@@ -38,12 +36,10 @@ module mdl_linked_list
 			type(node), pointer :: current => null()
 
 			if (.not. associated(list%head)) then
-				allocate(list%head)
-				list%head%value = num
+				call allocate_node(list%head, num)
 				list%tail => list%head
 			else
-				allocate(current)
-				current%value = num
+				call allocate_node(current, num)
 				list%tail%next => current
 				list%tail => current
 			endif
@@ -55,14 +51,29 @@ module mdl_linked_list
 			type(linked_list)   :: list
 			type(node), pointer :: current
 
-			print *, '['
+			write(*, '(a)', advance = 'no') '['
 			current => list%head
 			do
 				if (.not. associated(current)) exit
-				print *, current%value, ','
+				if (.not. associated(current%next)) then
+					write(*, '(1x, i0, a)', advance = 'no') current%value, ']'
+				else
+					write(*, '(1x, i0, a)', advance = 'no') current%value, ','
+				endif
 				current => current%next
 			enddo
-			print *, ']'
+			write(*, *)
+
+		end subroutine
+
+		subroutine allocate_node(new_ele, datum)
+			implicit none
+			type(node), pointer :: new_ele
+			integer             :: datum
+
+			allocate(new_ele)
+			new_ele%value = datum
+			nullify(new_ele%next)
 
 		end subroutine
 end module mdl_linked_list
