@@ -76,4 +76,66 @@ module mdl_linked_list
 			nullify(new_ele%next)
 
 		end subroutine
+
+		function search_node(list, key)
+			implicit none
+			type(linked_list)   :: list
+			type(node), pointer :: p
+			type(node), pointer :: search_node
+			integer             :: key
+
+			p => list%head
+			do while (associated(p))
+				if (p%value == key) exit
+				p => p%next
+			enddo
+			search_node => p
+		end function
+
+		function search_prev_node(list, key)
+			implicit none
+			type(linked_list)   :: list
+			type(node), pointer :: p
+			type(node), pointer :: search_prev_node
+			type(node), pointer :: q => null()
+			integer             :: key
+
+			p => list%head
+			do while (associated(p))
+				if (p%value == key) exit
+				q => p
+				p => p%next
+			enddo
+			search_prev_node => q
+
+		end function
+
+		subroutine remove_node(list, key)
+			implicit none
+			type(linked_list)   :: list
+			integer             :: key
+			type(node), pointer :: p => null()
+			type(node), pointer :: q => null()
+
+			p => search_node(list, key)
+			q => search_prev_node(list, key)
+			
+			if (.not. associated(p)) then
+				write(*, *) 'Cannot find key ', key
+				return
+			endif
+
+			if (associated(q)) then
+				if (associated(p, list%tail)) list%tail => q
+				q%next => p%next
+				nullify(p)
+				deallocate(p)
+			else
+				list%head => p%next
+				if (.not. associated(list%head)) nullify(list%tail)
+			endif
+
+		end subroutine
+
+
 end module mdl_linked_list
