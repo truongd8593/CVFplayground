@@ -137,5 +137,20 @@ module mdl_linked_list
 
 		end subroutine
 
+		subroutine remove_head_node(list)
+			implicit none
+			type(linked_list)   :: list
+			type(node), pointer :: p
+
+			p => list%head
+
+			if (associated(p)) then
+				list%head => list%head%next
+				nullify(p)
+				deallocate(p)
+				if (.not. associated(list%head)) nullify(list%tail)
+			endif
+		end subroutine
+
 
 end module mdl_linked_list

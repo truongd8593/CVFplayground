@@ -94,10 +94,28 @@ SOURCE=.\mdl_linked_list.f90
 # End Source File
 # Begin Source File
 
-SOURCE=.\TestCVF.f90
-NODEP_F90_TESTC=\
+SOURCE=.\mdl_stack.f90
+NODEP_F90_MDL_S=\
 	".\Debug\mdl_linked_list.mod"\
 	
+# End Source File
+# Begin Source File
+
+SOURCE=.\test_linked_list.f90
+DEP_F90_TEST_=\
+	".\Debug\mdl_linked_list.mod"\
+	
+# End Source File
+# Begin Source File
+
+SOURCE=.\test_stack.f90
+NODEP_F90_TEST_S=\
+	".\Debug\mdl_stack.mod"\
+	
+# End Source File
+# Begin Source File
+
+SOURCE=.\TestCVF.f90
 # End Source File
 # End Group
 # Begin Group "Header Files"
