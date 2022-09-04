@@ -90,6 +90,10 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
 # Begin Source File
 
+SOURCE=.\mdl_gen_ll.f90
+# End Source File
+# Begin Source File
+
 SOURCE=.\mdl_linked_list.f90
 # End Source File
 # Begin Source File
@@ -101,8 +105,15 @@ NODEP_F90_MDL_S=\
 # End Source File
 # Begin Source File
 
+SOURCE=.\test_gen_ll.f90
+NODEP_F90_TEST_=\
+	".\Debug\Generic_List.mod"\
+	
+# End Source File
+# Begin Source File
+
 SOURCE=.\test_linked_list.f90
-DEP_F90_TEST_=\
+NODEP_F90_TEST_L=\
 	".\Debug\mdl_linked_list.mod"\
 	
 # End Source File
