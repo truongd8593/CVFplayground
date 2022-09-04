@@ -8,7 +8,7 @@ USE Generic_List, ONLY : Link_Ptr_Type,&
 						 List_Type
 USE Generic_List, ONLY : LI_Init_List,LI_Add_To_Head,LI_Get_Head,&
                          LI_Remove_Head,LI_Get_Next,LI_Associated,&
-						 LI_Get_Len,LI_Flip_Direction
+						 LI_Get_Len,LI_Flip_Direction,LI_Add_To_Tail
 
 IMPLICIT NONE
 
@@ -30,7 +30,7 @@ TYPE User_Ptr_Type
   TYPE(User_Type), POINTER :: P
 END TYPE User_Ptr_Type
 
-TYPE(List_Type)      :: User_List,Sublist
+TYPE(List_Type)      :: User_List,Sublist,User_List_2
 TYPE(Link_Ptr_Type)  :: Link,Sublink
 TYPE(User_Ptr_Type)  :: User,Subuser
 
@@ -103,5 +103,32 @@ ENDDO
 WRITE(6,*)
 WRITE(6,*)'Length = ',LI_Get_Len(User_List)
 WRITE(6,*)
+
+! Build up list (add to stack)
+N=5
+DO I=1,N
+   ALLOCATE(User%P); ALLOCATE(User%P%Data)
+   User%P%Data%Index = I
+   User%P%Data%User_Stuff = I*I
+   Link = TRANSFER(User,Link)
+   CALL LI_Add_To_Tail(Link,User_List_2)
+ENDDO
+
+! Cycle through list
+Link = LI_Get_Head(User_List_2)
+DO WHILE(LI_Associated(Link))
+   User = TRANSFER(Link,User)
+   WRITE(6,*)User%P%Data%Index,User%P%Data%User_Stuff
+   Link = LI_Get_Next(Link)
+ENDDO
+
+! Remove from list (stack)
+WRITE(6,*)
+DO
+   Link = LI_Remove_Head(User_List_2)
+   IF(.NOT.LI_Associated(Link))EXIT
+   User = TRANSFER(Link,User)
+   DEALLOCATE(User%P)
+ENDDO
 
 END SUBROUTINE

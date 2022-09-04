@@ -54,6 +54,7 @@ PUBLIC :: &
      LI_Get_Head,         & ! Returns the first Link in the list
      LI_Get_Next,         & ! Return the next Link after a given one
      LI_Add_To_Head,      & ! Add a Link to the head of the list
+	 LI_Add_To_Tail,      & ! Add a Link to the tail of the list
      LI_Remove_Head,      & ! Remove the first Link and return it
      LI_Get_Len,          & ! Compute list length
      LI_Associated,       & ! Check if list member is associated
@@ -74,6 +75,7 @@ END TYPE Link_Ptr_Type
 TYPE List_Type             
   PRIVATE
   TYPE(Link_Type) :: Head   ! Dummy Link always at head of list
+  TYPE(Link_type) :: Tail
 END TYPE List_Type
 
 CONTAINS
@@ -108,6 +110,7 @@ SUBROUTINE LI_Init_List(List)
   TYPE(List_Type),INTENT(INOUT),TARGET :: List
 
   NULLIFY(List%Head%Next)
+  NULLIFY(List%Tail%Next)
 
   RETURN
 END SUBROUTINE LI_Init_List
@@ -123,6 +126,24 @@ SUBROUTINE LI_Add_To_Head(Link,List)
 
   RETURN
 END SUBROUTINE LI_Add_To_Head
+
+!-----------------------------------------------------------------------
+SUBROUTINE LI_Add_To_Tail(Link,List)
+  IMPLICIT NONE
+  TYPE(List_Type),INTENT(INOUT)     :: List
+  TYPE(Link_Ptr_Type),INTENT(INOUT) :: Link
+
+  
+  IF (.NOT.ASSOCIATED(List%Head%Next)) THEN
+	Link%P%Next => List%Head%Next
+	List%Head%Next => Link%P
+	List%Tail%Next => List%Head%Next
+  ELSE
+	List%Tail%Next => Link%P%Next
+  ENDIF
+
+  RETURN
+END SUBROUTINE LI_Add_To_Tail
 
 !-----------------------------------------------------------------------
 SUBROUTINE LI_Flip_Direction(List)
