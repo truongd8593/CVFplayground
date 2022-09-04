@@ -45,19 +45,20 @@ IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: &
-     Link_Type,        &! Put a Link_Type field first in your structure
-     Link_Ptr_Type,    &! Mold this to and from your type ptr with TRANSFER
-     List_Type          ! You should declare a List_Type variable
+     Link_Type,        &    ! Put a Link_Type field first in your structure
+     Link_Ptr_Type,    &    ! Mold this to and from your type ptr with TRANSFER
+     List_Type              ! You should declare a List_Type variable
 
 PUBLIC :: & 
-     LI_Init_List,        &! Initialise the List_Type variable before use
-     LI_Get_Head,         &! Returns the first Link in the list
-     LI_Get_Next,         &! Return the next Link after a given one
-     LI_Add_To_Head,      &! Add a Link to the head of the list
-     LI_Remove_Head,      &! Remove the first Link and return it
-     LI_Get_Len,          &! Compute list length
-     LI_Associated,       &! Check if list member is associated
-     LI_Check_List         ! Aborts program if list is invalid or corrupt
+     LI_Init_List,        & ! Initialise the List_Type variable before use
+     LI_Get_Head,         & ! Returns the first Link in the list
+     LI_Get_Next,         & ! Return the next Link after a given one
+     LI_Add_To_Head,      & ! Add a Link to the head of the list
+     LI_Remove_Head,      & ! Remove the first Link and return it
+     LI_Get_Len,          & ! Compute list length
+     LI_Associated,       & ! Check if list member is associated
+	 LI_Flip_Direction,   & ! Reverse order of list
+     LI_Check_List          ! Aborts program if list is invalid or corrupt
 
 TYPE Link_Type
   PRIVATE
@@ -122,6 +123,30 @@ SUBROUTINE LI_Add_To_Head(Link,List)
 
   RETURN
 END SUBROUTINE LI_Add_To_Head
+
+!-----------------------------------------------------------------------
+SUBROUTINE LI_Flip_Direction(List)
+  IMPLICIT NONE
+  TYPE(List_Type),INTENT(INOUT),TARGET :: List
+  TYPE(Link_Ptr_Type) :: Prev,Curr,Next
+
+  Curr%P => List%Head%Next
+  NULLIFY(Prev%P)
+
+  ! Loop:
+  DO WHILE (ASSOCIATED(Curr%P))
+   Next%P => Curr%P%Next
+   Curr%P%Next => Prev%P
+   Prev%P => Curr%P
+   Curr%P => Next%P
+  ENDDO
+
+  ! Reached the new HEAD:
+  List%Head%Next => Prev%P
+
+  RETURN
+
+END SUBROUTINE LI_Flip_Direction
 
 !-----------------------------------------------------------------------
 INTEGER FUNCTION LI_Get_Len(List)

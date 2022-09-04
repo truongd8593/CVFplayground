@@ -1,12 +1,14 @@
-!..........................................................................
 SUBROUTINE Test_Gen_Ll
 
 ! Defines and manipulates list(s) of a user-defined type all based on
 ! a single generic list type. 
 
-USE Generic_List, ONLY : Link_Ptr_Type,Link_Type,List_Type
+USE Generic_List, ONLY : Link_Ptr_Type,&
+                         Link_Type,&
+						 List_Type
 USE Generic_List, ONLY : LI_Init_List,LI_Add_To_Head,LI_Get_Head,&
-     LI_Remove_Head,LI_Get_Next,LI_Associated,LI_Get_Len
+                         LI_Remove_Head,LI_Get_Next,LI_Associated,&
+						 LI_Get_Len,LI_Flip_Direction
 
 IMPLICIT NONE
 
@@ -47,6 +49,7 @@ DO I=1,N
    Link = TRANSFER(User,Link)
    CALL LI_Add_To_Head(Link,User_List)
 ENDDO
+CALL LI_Flip_Direction(User_List)
 
 ! Cycle through list
 Link = LI_Get_Head(User_List)
@@ -102,4 +105,3 @@ WRITE(6,*)'Length = ',LI_Get_Len(User_List)
 WRITE(6,*)
 
 END SUBROUTINE
-!..........................................................................
